@@ -34,11 +34,13 @@ def make_chains(text_string):
     string_length = len(words)
     for index in range(string_length - 1):
         bi_gram = (words[index], words[index + 1])
+        
+        # Checking if we've hit the last two indices of the words list
+        # Add [None] to list of values associated with the last tuple of words
         try:
             chains[bi_gram] = chains.get(bi_gram, []) + [words[index + 2]]
         except IndexError:
-            chains[bi_gram] = chains.get(bi_gram, []) + []
-
+            chains[bi_gram] = chains.get(bi_gram, []) + [None]
 
     return chains
 
@@ -46,13 +48,25 @@ def make_chains(text_string):
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
-    text = ""
+    # Choose a random tuple from list of keys
+    link = choice(chains.keys())
 
-    # your code goes here
+    # Initialize the text string with the words in the chosen tuple
+    text = link[0] + ' ' + link[1]
+
+    # Add words to the text until reach next_word == None
+    while True:
+        word_options = chains[link]
+        next_word = choice(word_options)
+        # If next_word = None because it was the last value added to the dict
+        if not next_word:
+            break
+        text += ' ' + next_word
+        link = (link[1], next_word)
 
     return text
 
-
+# Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
 input_path = "green-eggs.txt"
 
 # Open the file and turn it into one long string
