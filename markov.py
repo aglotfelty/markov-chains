@@ -1,5 +1,5 @@
 from random import choice
-
+import sys
 
 def open_and_read_file(file_path):
     """Takes file path as string; returns text as string.
@@ -7,7 +7,6 @@ def open_and_read_file(file_path):
     Takes a string that is a file path, opens the file, and turns
     the file's contents as one string of text.
     """
-
     contents = open(file_path).read()
     # your code goes here
 
@@ -67,7 +66,8 @@ def make_text(chains):
     return text
 
 # Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
-input_path = "green-eggs.txt"
+# input_path = "gettysburg.txt"
+input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
