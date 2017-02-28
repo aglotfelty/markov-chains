@@ -30,6 +30,15 @@ def make_chains(text_string):
     chains = {}
 
     # your code goes here
+    words = text_string.split()
+    string_length = len(words)
+    for index in range(string_length - 1):
+        bi_gram = (words[index], words[index + 1])
+        try:
+            chains[bi_gram] = chains.get(bi_gram, []) + [words[index + 2]]
+        except IndexError:
+            chains[bi_gram] = chains.get(bi_gram, []) + [words[0]]
+
 
     return chains
 
@@ -49,7 +58,7 @@ input_path = "green-eggs.txt"
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
 
-# Get a Markov chain
+# Get a Markov chain 
 chains = make_chains(input_text)
 
 # Produce random text
