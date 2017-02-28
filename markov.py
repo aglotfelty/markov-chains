@@ -37,7 +37,7 @@ def make_chains(text_string):
         try:
             chains[bi_gram] = chains.get(bi_gram, []) + [words[index + 2]]
         except IndexError:
-            chains[bi_gram] = chains.get(bi_gram, []) + [words[0]]
+            chains[bi_gram] = chains.get(bi_gram, []) + []
 
 
     return chains
