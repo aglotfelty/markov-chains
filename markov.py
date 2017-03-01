@@ -135,6 +135,28 @@ def make_n_gram_text(chains, cap_at_sentence=False):
 
     return text
 
+def generate_phrase(chains, char_length=140):
+    """Generates a random phrase of given character length (default is 140)"""
+
+    phrase = ""
+    tries = 0
+
+    while tries < 200:
+        sentence = make_n_gram_text(chains, True)
+        tries += 1
+        if len(sentence) <= char_length:
+            phrase += sentence + " "
+            char_length = char_length - len(sentence) - 1
+            if char_length == 0:
+                break
+        else:
+            continue
+       
+    return phrase
+
+
+
+
 # Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
 input_path = "gettysburg.txt"
 # input_path = sys.argv[1]
@@ -146,7 +168,7 @@ input_text = open_and_read_file(input_path)
 # chains = make_chains(input_text)
 
 # Get a Markov chain 
-chains = make_n_gram_chains(input_text, 3)
+chains = make_n_gram_chains(input_text, 2)
 
 # Produce random text
 # random_text = make_text(chains)
@@ -154,4 +176,7 @@ chains = make_n_gram_chains(input_text, 3)
 # Produce random text with n_gram
 random_text = make_n_gram_text(chains, True)
 
-print random_text
+# Produce random phrase of given character length
+print generate_phrase(chains)
+
+#print random_text
