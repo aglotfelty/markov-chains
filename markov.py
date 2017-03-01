@@ -63,16 +63,21 @@ def make_n_gram_chains(text_string, n):
     words = text_string.split()
     string_length = len(words)
     for index in range(string_length - (n-1)):
-        n_gram = []
-        while len(n_gram) < n:
-            n_gram.append(words[index])
-            index += 1
-        n_gram = tuple(n_gram) 
-        post_while_loop_index = index  # index updated during while loop   
+        n_gram = tuple(words[index:index + n])
+
+        # ALTERNATIVE SOLUTION:
+        # n_gram = []
+        # while len(n_gram) < n:
+        #     n_gram.append(words[index])
+        #     index += 1
+        # n_gram = tuple(n_gram) 
+        # post_while_loop_index = index  # index updated during while loop  
+        # END ALTERNATIVE
+
         # Checking if we've hit the last n indices of the words list
         # Add [None] to list of values associated with the last tuple of words
         try:
-            chains[n_gram] = chains.get(n_gram, []) + [words[post_while_loop_index]]
+            chains[n_gram] = chains.get(n_gram, []) + [words[index + n]]
         except IndexError:
             chains[n_gram] = chains.get(n_gram, []) + [None]
 
@@ -103,16 +108,15 @@ def make_text(chains):
 def make_n_gram_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
-    # Choose a random tuple from list of keys
-    link = choice(chains.keys())
+    # Choose a random tuple from list of keys that starts with a capital letter
+    while True:
+        link = choice(chains.keys())
+        if link[0][0].isupper():  # Check if first letter of first word in tuple is capital
+            break
 
     # Initialize the text list 
-    text = []
+    text = list(link)
 
-    # Add words in the chosen tuple to our text list
-    for item in link:
-        text.append(item)
-   
     # Add words to the text until reach next_word == None
     while True:
         word_options = chains[link]
@@ -121,8 +125,8 @@ def make_n_gram_text(chains):
         if not next_word:
             break
         text.append(next_word) 
-        link = list(link[1:]) + [next_word] # Turn link into a list to add next_word
-        link = tuple(link) # Change link list back into a tuple
+        link = link[1:] + (next_word,) # Turn link into a list to add next_word
+        # link = tuple(link) # Change link list back into a tuple
 
     text = " ".join(text) # Turn list into a string separated by spaces
 
