@@ -152,13 +152,48 @@ def generate_phrase(chains, char_length=140):
         else:
             continue
        
-    return phrase
+    return phrase.strip()
 
+def make_a_phrase(chains, char_length=140):
+    """Takes a markov dictionary and tries to create phrase at specified length"""
+
+    while True:
+        sentence = make_n_gram_text(chains, True)
+        if len(sentence) <= char_length:
+            break
+        else:
+            continue
+    origin_sentence = sentence.split(" ")
+    origin_tuple = tuple(origin_sentence[-2:])
+    tries = 0
+    if len(sentence) < char_length:
+        words_in_sentence = sentence.split(" ")
+        last_two_words = tuple(words_in_sentence[-2:])
+        while tries < 200:
+            word_options = chains[last_two_words]
+            next_word = choice(word_options)
+            tries += 1
+            # If next_word = None because it was the last value added to the dict
+            if not next_word:
+                break
+            words_in_sentence.append(next_word)
+            if next_word[-1] in ".!?" or next_word is False:
+                phrase = " ".join(words_in_sentence)  # Turn list into a string separated by spaces
+                if len(phrase) <= char_length:
+                    return phrase
+                else:
+                    last_two_words = origin_tuple
+                    words_in_sentence = origin_sentence
+                    continue
+            last_two_words = last_two_words[1:] + (next_word,) # Turn link into a list to add next_word
+            # link = tuple(link) # Change link list back into a tuple
+    print len(sentence)        
+    return sentence          
 
 
 
 # Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
-input_path = "gettysburg.txt"
+input_path = "pianoman.txt"
 # input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
@@ -177,6 +212,7 @@ chains = make_n_gram_chains(input_text, 2)
 random_text = make_n_gram_text(chains, True)
 
 # Produce random phrase of given character length
-print generate_phrase(chains)
+# print generate_phrase(chains)
+print make_a_phrase(chains)
 
 #print random_text
