@@ -152,6 +152,6 @@ chains = make_n_gram_chains(input_text, 3)
 # random_text = make_text(chains)
 
 # Produce random text with n_gram
-random_text = make_n_gram_text(chains)
+random_text = make_n_gram_text(chains, True)
 
 print random_text
