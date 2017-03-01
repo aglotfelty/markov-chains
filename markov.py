@@ -105,7 +105,7 @@ def make_text(chains):
 
     return text
 
-def make_n_gram_text(chains):
+def make_n_gram_text(chains, cap_at_sentence=False):
     """Takes dictionary of markov chains; returns random text."""
 
     # Choose a random tuple from list of keys that starts with a capital letter
@@ -124,7 +124,10 @@ def make_n_gram_text(chains):
         # If next_word = None because it was the last value added to the dict
         if not next_word:
             break
-        text.append(next_word) 
+        text.append(next_word)
+        if cap_at_sentence:
+            if next_word[-1] in ".!?":
+                break 
         link = link[1:] + (next_word,) # Turn link into a list to add next_word
         # link = tuple(link) # Change link list back into a tuple
 
