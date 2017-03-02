@@ -159,53 +159,53 @@ def make_a_phrase(chains, char_length=140):
 
     # Make sure origin sentence is within character count limit
     while True:
-        sentence = make_n_gram_text(chains, True)
+        sentence = make_n_gram_text(chains, cap_at_sentence=True)
         if len(sentence) <= char_length:
             break
         else:
             continue
 
     # Create variables for origin sentence words & tuple
-    origin_sentence = sentence.split(" ")
-    origin_tuple = tuple(origin_sentence[-2:])
+    origin_sentence_words = sentence.split(" ")
+    origin_tuple = tuple(origin_sentence_words[-2:])
     tries = 0
 
     # If the sentence is less than character length, 
     # try to generate a second sentence within limits
-    if len(sentence) < char_length:
-        words_in_sentence = sentence.split(" ")
-        last_two_words = tuple(words_in_sentence[-2:])
+    
+    words_in_sentence = sentence.split(" ")
+    last_two_words = tuple(words_in_sentence[-2:])
 
-        while tries < 200:
-            word_options = chains[last_two_words]
-            next_word = choice(word_options)
-            tries += 1
-            
-            # If next_word = None because it was the last value added to the dict
-            if not next_word:
-                break
-            
-            words_in_sentence.append(next_word)
-            
-            # Return phrase if it ends in punctuation
-            if next_word[-1] in ".!?":
-                phrase = " ".join(words_in_sentence)  # Turn list into a string separated by spaces
-                if len(phrase) <= char_length:
-                    return phrase
-                # If new phrase is too long, try again with a new sentence starting with origin info
-                else:
-                    last_two_words = origin_tuple
-                    words_in_sentence = origin_sentence
-                    continue
-            last_two_words = last_two_words[1:] + (next_word,) # Create new tuple
+    while tries < 200:
+        word_options = chains[last_two_words]
+        next_word = choice(word_options)
+        tries += 1
+        
+        # If next_word = None because it was the last value added to the dict
+        if not next_word:
+            break
+        
+        words_in_sentence.append(next_word)
+        
+        # Return phrase if it ends in punctuation
+        if next_word[-1] in ".!?":
+            phrase = " ".join(words_in_sentence)  # Turn list into a string separated by spaces
+            if len(phrase) <= char_length:
+                return phrase
+            # If new phrase is too long, try again with a new sentence starting with origin info
+            else:
+                last_two_words = origin_tuple
+                words_in_sentence = origin_sentence_words
+                continue
+        last_two_words = last_two_words[1:] + (next_word,) # Create new tuple
                  
     return sentence          
 
 
 
 # Return a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
-input_path = "gettysburg.txt"
-# input_path = sys.argv[1]
+# input_path = "gettysburg.txt"
+input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
